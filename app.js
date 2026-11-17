@@ -24,3 +24,22 @@ function tab(name){document.querySelectorAll('[data-tab]').forEach(b=>b.classLis
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,learned:[...learned],stats,idx},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='japanese-master-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 $('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(d.version!==1||!Array.isArray(d.learned)||!d.learned.every(n=>Number.isInteger(n)&&n>=0&&n<46))throw Error();learned=new Set(d.learned);stats={right:Math.max(0,Number(d.stats?.right)||0),total:Math.max(0,Number(d.stats?.total)||0)};idx=Number.isInteger(d.idx)&&d.idx>=0&&d.idx<46?d.idx:0;save();review();alert('진도를 불러왔습니다.')}catch{alert('올바른 진도 파일이 아닙니다.')}};window.addEventListener('resize',()=>{if(!$('learn').hidden)resize()});show();resize();if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+
+let deferredInstall=null;
+const installInfo=$('installInfo');
+function isInstalled(){return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;installInfo.textContent='앱 설치 준비가 완료되었습니다.'});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;installInfo.textContent='설치 완료! 홈 화면에서 일본어 마스터를 실행하세요.'});
+$('installApp').onclick=async()=>{
+ if(isInstalled()){installInfo.textContent='이미 앱으로 실행 중입니다.';return}
+ if(deferredInstall){const p=deferredInstall;deferredInstall=null;p.prompt();const result=await p.userChoice;installInfo.textContent=result.outcome==='accepted'?'설치가 진행됩니다.':'설치를 취소했습니다.';return}
+ installInfo.textContent='Chrome 메뉴(⋮) → 홈 화면에 추가 → 설치를 선택하세요. 설치 메뉴가 없다면 Chrome에서 열어주세요.';
+};
+$('removeApp').onclick=()=>{
+ const msg='앱 삭제 방법: 갤럭시탭 홈 화면에서 일본어 마스터 아이콘을 길게 누른 뒤 [설치 삭제]를 선택하세요. 또는 설정 → 애플리케이션 → 일본어 마스터 → 삭제. 웹페이지는 보안상 앱을 직접 삭제할 수 없습니다. 학습 기록은 삭제될 수 있으니 복습·진도에서 먼저 백업하세요.';
+ installInfo.textContent=msg;alert(msg);
+};
+$('strokeOrder').onclick=()=>{
+ const query=encodeURIComponent('ひらがな '+kana[idx]+' 書き順 stroke order');
+ window.open('https://www.google.com/search?tbm=isch&q='+query,'_blank','noopener,noreferrer');
+};
