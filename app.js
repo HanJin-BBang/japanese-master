@@ -23,7 +23,7 @@ function review(){$('progressText').textContent='학습 완료 '+learned.size+' 
 function tab(name){document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));for(const id of ['learn','quiz','review'])$(id).hidden=id!==name;if(name==='quiz'){quiz();score()}if(name==='review')review();if(name==='learn')setTimeout(resize,0)}
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));
 $('export').onclick=()=>{const blob=new Blob([JSON.stringify({version:1,learned:[...learned],stats,idx},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='japanese-master-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-$('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(d.version!==1||!Array.isArray(d.learned)||!d.learned.every(n=>Number.isInteger(n)&&n>=0&&n<46))throw Error();learned=new Set(d.learned);stats={right:Math.max(0,Number(d.stats?.right)||0),total:Math.max(0,Number(d.stats?.total)||0)};idx=Number.isInteger(d.idx)&&d.idx>=0&&d.idx<46?d.idx:0;save();review();alert('진도를 불러왔습니다.')}catch{alert('올바른 진도 파일이 아닙니다.')}};window.addEventListener('resize',()=>{if(!$('learn').hidden)resize()});show();resize();if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
+$('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{try{const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(d.version!==1||!Array.isArray(d.learned)||!d.learned.every(n=>Number.isInteger(n)&&n>=0&&n<46))throw Error();learned=new Set(d.learned);stats={right:Math.max(0,Number(d.stats?.right)||0),total:Math.max(0,Number(d.stats?.total)||0)};idx=Number.isInteger(d.idx)&&d.idx>=0&&d.idx<46?d.idx:0;save();review();alert('진도를 불러왔습니다.')}catch{alert('올바른 진도 파일이 아닙니다.')}};window.addEventListener('resize',()=>{if(!$('learn').hidden)resize()});resize();if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
 let deferredInstall=null;
 const installInfo=$('installInfo');
@@ -59,4 +59,4 @@ $('strokeOrder').onclick=()=>{
  const query=encodeURIComponent('ひらがな '+kana[idx]+' 書き順 stroke order');
  window.open('https://www.google.com/search?tbm=isch&q='+query,'_blank','noopener,noreferrer');
 };
-renderStrokeOrder();
+show();
