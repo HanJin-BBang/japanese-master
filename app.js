@@ -77,12 +77,37 @@ $('strokeHeading').onclick=()=>{strokeExpanded=!strokeExpanded;updateStrokeVisib
 function renderStrokeOrder(){
  const el=$('strokeDiagram'),cap=$('strokeCaption');
  const paths=HIRAGANA_STROKES[kana[idx]]||[];
- const colors=['#60a5fa','#34c99a','#e98c95','#a78bfa','#f59e0b','#38bdf8'];
+ const colors=['#2563eb','#059669','#dc2626','#7c3aed','#b45309','#0284c7'];
  const guides='<path d="M54.5 5V104 M5 54.5H104" stroke="#67c9ed" stroke-width=".6" stroke-dasharray="3 2" fill="none"/>';
- const strokes=paths.map((d,i)=>'<path d="'+d+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>').join('');
- const numbers=paths.map((d,i)=>{const m=d.match(/^M\\s*(-?\\d+(?:\\.\\d+)?)[,\\s]+(-?\\d+(?:\\.\\d+)?)/i);if(!m)return '';const x=Math.max(6,Math.min(96,Number(m[1])-8)),y=Math.max(10,Math.min(102,Number(m[2])-5));return '<text x="'+x+'" y="'+y+'" font-size="8" font-weight="700" fill="'+colors[i%colors.length]+'" stroke="white" stroke-width="2" paint-order="stroke">'+(i+1)+'</text>'}).join('');
- el.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109 109" role="img" aria-label="'+kana[idx]+' '+paths.length+'획 쓰는 순서">'+guides+strokes+numbers+'</svg>';
- cap.textContent=kana[idx]+' · '+paths.length+'획 · 숫자와 색상 순서대로 따라 쓰세요.';
+ const strokes=paths.map((d,i)=>'<path class="stroke-path" d="'+d+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>').join('');
+ el.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109 109" role="img" aria-label="'+kana[idx]+' '+paths.length+'획, 숫자와 화살표로 순서 및 방향 표시">'+guides+strokes+'</svg>';
+ const svg=el.querySelector('svg');
+ const NS='http://www.w3.org/2000/svg';
+ const make=(tag,attrs)=>{const n=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,String(v)));svg.appendChild(n);return n};
+ svg.querySelectorAll('.stroke-path').forEach((path,i)=>{
+  const color=colors[i%colors.length];
+  const len=path.getTotalLength();
+  const start=path.getPointAtLength(0);
+  // Label the actual pen-down point, rather than relying on a parsed path string.
+  const x=Math.max(8,Math.min(101,start.x-7));
+  const y=Math.max(10,Math.min(101,start.y-6));
+  const label=make('text',{x,y,'font-size':8,'font-weight':800,fill:color,stroke:'#fff','stroke-width':2.4,'paint-order':'stroke', 'aria-hidden':'true'});
+  label.textContent=String(i+1);
+  // Direction arrow on each stroke: follow its actual SVG path tangent.
+  const at=path.getPointAtLength(len*.14),ahead=path.getPointAtLength(Math.min(len,len*.24));
+  const dx=ahead.x-at.x,dy=ahead.y-at.y,mag=Math.hypot(dx,dy);
+  if(mag>0.01){
+   const ux=dx/mag,uy=dy/mag;
+   const tipX=at.x+ux*8,tipY=at.y+uy*8;
+   make('line',{x1:at.x,y1:at.y,x2:tipX,y2:tipY,stroke:'#fff','stroke-width':3.4,'stroke-linecap':'round','aria-hidden':'true'});
+   make('line',{x1:at.x,y1:at.y,x2:tipX,y2:tipY,stroke:color,'stroke-width':1.65,'stroke-linecap':'round','aria-hidden':'true'});
+   const wing=3.4,back=4.3;
+   const leftX=tipX-ux*back-uy*wing,leftY=tipY-uy*back+ux*wing;
+   const rightX=tipX-ux*back+uy*wing,rightY=tipY-uy*back-ux*wing;
+   make('polygon',{points:tipX+','+tipY+' '+leftX+','+leftY+' '+rightX+','+rightY,fill:color,stroke:'#fff','stroke-width':.5,'aria-hidden':'true'});
+  }
+ });
+ cap.textContent=kana[idx]+' · '+paths.length+'획 · ①부터 번호순으로, 각 화살표 방향대로 쓰세요.';
  updateStrokeVisibility();
 }
 
