@@ -57,7 +57,20 @@ function updateStrokeVisibility(){
  pane.classList.toggle('collapsed',!strokeExpanded);
  button.setAttribute('aria-expanded',String(strokeExpanded));
  button.textContent='획순 안내('+(strokeExpanded?'표시 중':'접힘')+') '+(strokeExpanded?'▴':'▾');
+ syncMobileNavigation();
 }
+function syncMobileNavigation(){
+ const nav=document.querySelector('#learn .page-actions');
+ const guideHeader=document.querySelector('#strokePane .pane-top');
+ const writingToolbar=document.querySelector('#learn .lesson-toolbar');
+ if(!nav||!guideHeader||!writingToolbar)return;
+ const compact=window.matchMedia('(max-width:720px)').matches;
+ const target=compact&&!strokeExpanded?guideHeader:writingToolbar;
+ if(nav.parentElement!==target)target.prepend(nav);
+ guideHeader.classList.toggle('has-navigation',compact&&!strokeExpanded);
+ writingToolbar.classList.toggle('navigation-relocated',compact&&!strokeExpanded);
+}
+window.addEventListener('resize',syncMobileNavigation);
 $('strokeHeading').onclick=()=>{strokeExpanded=!strokeExpanded;updateStrokeVisibility()};
 function renderStrokeOrder(){
  const el=$('strokeDiagram'),cap=$('strokeCaption'),heading=$('strokeHeading');
