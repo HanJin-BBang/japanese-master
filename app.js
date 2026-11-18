@@ -66,7 +66,7 @@ function syncMobileNavigation(){
  if(!nav||!guideHeader||!writingToolbar)return;
  const compact=window.matchMedia('(max-width:720px)').matches;
  const target=compact&&!strokeExpanded?guideHeader:writingToolbar;
- if(nav.parentElement!==target)target.prepend(nav);
+ if(nav.parentElement!==target){if(target===guideHeader)target.append(nav);else target.prepend(nav);}
  guideHeader.classList.toggle('has-navigation',compact&&!strokeExpanded);
  writingToolbar.classList.toggle('navigation-relocated',compact&&!strokeExpanded);
 }
