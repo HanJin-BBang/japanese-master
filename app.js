@@ -50,13 +50,15 @@ const aStrokeSvg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" 
 <path d="M58 124H76" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowB)"/><path d="M147 54V81" stroke="#34c99a" stroke-width="3" marker-end="url(#arrowG)"/><path d="M261 157V177" stroke="#e98c95" stroke-width="3" marker-end="url(#arrowR)"/>
 </svg>`;
 function renderStrokeOrder(){
- const el=$('strokeDiagram'),cap=$('strokeCaption'),btn=$('strokeOrder');
- if(kana[idx]==='あ'){el.innerHTML=aStrokeSvg;cap.textContent='あ · 3획 · ① 가로 → ② 세로 ↓ ③ 둥글게 이어 쓰기';btn.textContent='🔢 획순 보기 (표시 중)'}
- else{el.innerHTML='<div style="padding:28px;text-align:center;color:#64748b"><div style="font-size:90px;color:#cbd5e1">'+kana[idx]+'</div>이 글자의 색상별 획순 도해는 준비 중입니다.</div>';cap.textContent='현재는 あ의 3획 도해를 지원합니다. 다른 글자는 참고 자료를 열어 확인할 수 있습니다.';btn.textContent='🔎 '+kana[idx]+' 획순 자료 검색'}
+ const el=$('strokeDiagram'),cap=$('strokeCaption'),heading=$('strokeHeading');
+ if(kana[idx]==='あ'){
+  el.innerHTML=aStrokeSvg;
+  cap.textContent='あ · 3획 · ① 가로 → ② 세로 ↓ ③ 둥글게 이어 쓰기';
+  heading.textContent='획순 안내(표시 중)';
+ }else{
+  el.innerHTML='<div style="height:100%;display:grid;place-items:center;text-align:center;color:#64748b"><div><div style="font-size:90px;color:#cbd5e1">'+kana[idx]+'</div>색상별 획순 준비 중</div></div>';
+  cap.textContent='해당 글자의 획순 도해는 준비 중입니다.';
+  heading.textContent='획순 안내(준비 중)';
+ }
 }
-$('strokeOrder').onclick=()=>{
- if(kana[idx]==='あ'){$('strokeDiagram').scrollIntoView({behavior:'smooth',block:'nearest'});return}
- const query=encodeURIComponent('ひらがな '+kana[idx]+' 書き順 stroke order');
- window.open('https://www.google.com/search?tbm=isch&q='+query,'_blank','noopener,noreferrer');
-};
 show();
