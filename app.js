@@ -49,16 +49,25 @@ const aStrokeSvg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" 
 <g font-family="system-ui,sans-serif" font-size="27" font-weight="600"><text x="43" y="120" fill="#60a5fa">1</text><text x="127" y="50" fill="#34c99a">2</text><text x="249" y="153" fill="#e98c95">3</text></g>
 <path d="M58 124H76" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowB)"/><path d="M147 54V81" stroke="#34c99a" stroke-width="3" marker-end="url(#arrowG)"/><path d="M261 157V177" stroke="#e98c95" stroke-width="3" marker-end="url(#arrowR)"/>
 </svg>`;
+let strokeExpanded=true;
+function updateStrokeVisibility(){
+ const panel=$('strokeContent'),button=$('strokeHeading'),pane=$('strokePane');
+ panel.hidden=!strokeExpanded;
+ pane.classList.toggle('collapsed',!strokeExpanded);
+ button.setAttribute('aria-expanded',String(strokeExpanded));
+ button.textContent='획순 안내('+(strokeExpanded?'표시 중':'접힘')+') '+(strokeExpanded?'▴':'▾');
+}
+$('strokeHeading').onclick=()=>{strokeExpanded=!strokeExpanded;updateStrokeVisibility()};
 function renderStrokeOrder(){
  const el=$('strokeDiagram'),cap=$('strokeCaption'),heading=$('strokeHeading');
  if(kana[idx]==='あ'){
   el.innerHTML=aStrokeSvg;
   cap.textContent='あ · 3획 · ① 가로 → ② 세로 ↓ ③ 둥글게 이어 쓰기';
-  heading.textContent='획순 안내(표시 중)';
+  updateStrokeVisibility();
  }else{
   el.innerHTML='<div style="height:100%;display:grid;place-items:center;text-align:center;color:#64748b"><div><div style="font-size:90px;color:#cbd5e1">'+kana[idx]+'</div>색상별 획순 준비 중</div></div>';
   cap.textContent='해당 글자의 획순 도해는 준비 중입니다.';
-  heading.textContent='획순 안내(준비 중)';
+  updateStrokeVisibility();
  }
 }
 show();
