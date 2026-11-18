@@ -33,7 +33,8 @@ window.addEventListener('appinstalled',()=>{deferredInstall=null;installInfo.tex
 $('installApp').onclick=async()=>{
  if(isInstalled()){installInfo.textContent='이미 앱으로 실행 중입니다.';return}
  if(deferredInstall){const p=deferredInstall;deferredInstall=null;p.prompt();const result=await p.userChoice;installInfo.textContent=result.outcome==='accepted'?'설치가 진행됩니다.':'설치를 취소했습니다.';return}
- installInfo.textContent='Chrome 메뉴(⋮) → 홈 화면에 추가 → 설치를 선택하세요. 설치 메뉴가 없다면 Chrome에서 열어주세요.';
+ const chrome=/CriOS|Chrome\//.test(navigator.userAgent)&&!/EdgA|OPR\//.test(navigator.userAgent);
+ installInfo.textContent=chrome?'Chrome 메뉴(⋮) → 홈 화면에 추가 → 설치를 선택하세요. 설치 메뉴가 보이지 않으면 Chrome을 업데이트한 뒤 다시 시도하세요.':'설치는 Chrome 브라우저를 권장합니다. Chrome이 없다면 Play 스토어에서 설치한 뒤, Chrome 주소창에 이 페이지 주소를 입력하고 메뉴(⋮) → 홈 화면에 추가 → 설치를 선택하세요.';
 };
 $('removeApp').onclick=()=>{
  const msg='앱 삭제 방법: 갤럭시탭 홈 화면에서 일본어 마스터 아이콘을 길게 누른 뒤 [설치 삭제]를 선택하세요. 또는 설정 → 애플리케이션 → 일본어 마스터 → 삭제. 웹페이지는 보안상 앱을 직접 삭제할 수 없습니다. 학습 기록은 삭제될 수 있으니 복습·진도에서 먼저 백업하세요.';
