@@ -73,15 +73,15 @@ function syncMobileNavigation(){
 window.addEventListener('resize',syncMobileNavigation);
 $('strokeHeading').onclick=()=>{strokeExpanded=!strokeExpanded;updateStrokeVisibility()};
 function renderStrokeOrder(){
- const el=$('strokeDiagram'),cap=$('strokeCaption'),heading=$('strokeHeading');
- if(kana[idx]==='あ'){
-  el.innerHTML=aStrokeSvg;
-  cap.textContent='あ · 3획 · ① 가로 → ② 세로 ↓ ③ 둥글게 이어 쓰기';
-  updateStrokeVisibility();
- }else{
-  el.innerHTML='<div style="height:100%;display:grid;place-items:center;text-align:center;color:#64748b"><div><div style="font-size:90px;color:#cbd5e1">'+kana[idx]+'</div>색상별 획순 준비 중</div></div>';
-  cap.textContent='해당 글자의 획순 도해는 준비 중입니다.';
-  updateStrokeVisibility();
- }
+ const el=$('strokeDiagram'),cap=$('strokeCaption');
+ const paths=HIRAGANA_STROKES[kana[idx]]||[];
+ const colors=['#60a5fa','#34c99a','#e98c95','#a78bfa','#f59e0b','#38bdf8'];
+ const guides='<path d="M54.5 5V104 M5 54.5H104" stroke="#67c9ed" stroke-width=".6" stroke-dasharray="3 2" fill="none"/>';
+ const strokes=paths.map((d,i)=>'<path d="'+d+'" fill="none" stroke="'+colors[i%colors.length]+'" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>').join('');
+ const numbers=paths.map((d,i)=>{const m=d.match(/^M\\s*(-?\\d+(?:\\.\\d+)?)[,\\s]+(-?\\d+(?:\\.\\d+)?)/i);if(!m)return '';const x=Math.max(6,Math.min(96,Number(m[1])-8)),y=Math.max(10,Math.min(102,Number(m[2])-5));return '<text x="'+x+'" y="'+y+'" font-size="8" font-weight="700" fill="'+colors[i%colors.length]+'" stroke="white" stroke-width="2" paint-order="stroke">'+(i+1)+'</text>'}).join('');
+ el.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 109 109" role="img" aria-label="'+kana[idx]+' '+paths.length+'획 쓰는 순서">'+guides+strokes+numbers+'</svg>';
+ cap.textContent=kana[idx]+' · '+paths.length+'획 · 숫자와 색상 순서대로 따라 쓰세요.';
+ updateStrokeVisibility();
 }
+
 show();
