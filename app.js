@@ -9,7 +9,7 @@ function save(){localStorage.setItem('jm_index',JSON.stringify(idx));localStorag
 const canvas=$('ink'),ctx=canvas.getContext('2d');let drawing=false,last=null;
 function resize(){const r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);ctx.setTransform(d,0,0,d,0,0);ctx.lineWidth=5;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#1d4ed8'}
 function clear(){ctx.clearRect(0,0,canvas.width,canvas.height)}
-function show(){$('character').textContent=kana[idx];$('guide').textContent=kana[idx];$('reading').textContent=romaji[idx]+' · '+hangul[idx];$('counter').textContent=(idx+1)+' / 46';$('known').textContent=learned.has(idx)?'✓ 학습 완료':'✓ 익혔어요';clear();save()}
+function show(){$('character').textContent=kana[idx];$('guide').textContent=kana[idx];$('reading').textContent=romaji[idx]+' · '+hangul[idx];$('counter').textContent=(idx+1)+' / 46';$('known').textContent=learned.has(idx)?'✓ 학습 완료':'✓ 익혔어요';clear();renderStrokeOrder();save()}
 function speak(){if(!('speechSynthesis' in window)){alert('이 브라우저는 음성 합성을 지원하지 않습니다.');return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(kana[idx]);u.lang='ja-JP';u.rate=.75;const v=speechSynthesis.getVoices().find(x=>x.lang.toLowerCase().startsWith('ja'));if(v)u.voice=v;speechSynthesis.speak(u)}
 $('speak').onclick=speak;$('prev').onclick=()=>{idx=(idx+45)%46;show()};$('next').onclick=()=>{idx=(idx+1)%46;show()};$('known').onclick=()=>{learned.has(idx)?learned.delete(idx):learned.add(idx);show()};
 const pos=e=>{const r=canvas.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
@@ -39,7 +39,24 @@ $('removeApp').onclick=()=>{
  const msg='앱 삭제 방법: 갤럭시탭 홈 화면에서 일본어 마스터 아이콘을 길게 누른 뒤 [설치 삭제]를 선택하세요. 또는 설정 → 애플리케이션 → 일본어 마스터 → 삭제. 웹페이지는 보안상 앱을 직접 삭제할 수 없습니다. 학습 기록은 삭제될 수 있으니 복습·진도에서 먼저 백업하세요.';
  installInfo.textContent=msg;alert(msg);
 };
+
+const aStrokeSvg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" aria-label="あ 세 획 쓰는 순서">
+<defs><marker id="arrowB" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0 0L5 2.5L0 5" fill="none" stroke="#60a5fa" stroke-width="1.2"/></marker><marker id="arrowG" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0 0L5 2.5L0 5" fill="none" stroke="#34c99a" stroke-width="1.2"/></marker><marker id="arrowR" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0 0L5 2.5L0 5" fill="none" stroke="#e98c95" stroke-width="1.2"/></marker></defs>
+<path d="M200 0V400 M0 200H400" stroke="#67c9ed" stroke-width="2.5" stroke-dasharray="12 7" fill="none"/>
+<path d="M85 122 Q157 125 258 101" stroke="#7cbcf6" stroke-width="20" stroke-linecap="round" fill="none"/>
+<path d="M165 55 Q151 145 159 243 Q160 300 173 321" stroke="#53cfa9" stroke-width="21" stroke-linecap="round" fill="none"/>
+<path d="M230 159 Q256 192 224 248 Q181 312 108 325 Q72 327 70 282 Q69 246 107 216 Q158 177 230 174 Q293 171 321 210 Q359 269 313 320 Q281 354 229 364" stroke="#ee949a" stroke-width="21" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<g font-family="system-ui,sans-serif" font-size="27" font-weight="600"><text x="43" y="120" fill="#60a5fa">1</text><text x="127" y="50" fill="#34c99a">2</text><text x="249" y="153" fill="#e98c95">3</text></g>
+<path d="M58 124H76" stroke="#60a5fa" stroke-width="3" marker-end="url(#arrowB)"/><path d="M147 54V81" stroke="#34c99a" stroke-width="3" marker-end="url(#arrowG)"/><path d="M261 157V177" stroke="#e98c95" stroke-width="3" marker-end="url(#arrowR)"/>
+</svg>`;
+function renderStrokeOrder(){
+ const el=$('strokeDiagram'),cap=$('strokeCaption'),btn=$('strokeOrder');
+ if(kana[idx]==='あ'){el.innerHTML=aStrokeSvg;cap.textContent='あ · 3획 · ① 가로 → ② 세로 ↓ ③ 둥글게 이어 쓰기';btn.textContent='🔢 획순 보기 (표시 중)'}
+ else{el.innerHTML='<div style="padding:28px;text-align:center;color:#64748b"><div style="font-size:90px;color:#cbd5e1">'+kana[idx]+'</div>이 글자의 색상별 획순 도해는 준비 중입니다.</div>';cap.textContent='현재는 あ의 3획 도해를 지원합니다. 다른 글자는 참고 자료를 열어 확인할 수 있습니다.';btn.textContent='🔎 '+kana[idx]+' 획순 자료 검색'}
+}
 $('strokeOrder').onclick=()=>{
+ if(kana[idx]==='あ'){$('strokeDiagram').scrollIntoView({behavior:'smooth',block:'nearest'});return}
  const query=encodeURIComponent('ひらがな '+kana[idx]+' 書き順 stroke order');
  window.open('https://www.google.com/search?tbm=isch&q='+query,'_blank','noopener,noreferrer');
 };
+renderStrokeOrder();
