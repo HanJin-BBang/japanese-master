@@ -82,6 +82,7 @@ function home(){
   ${(C.links||[]).map(l=>`<a class="linkcard" href="${l.href}"><b>${esc(l.label)}</b><span class="muted">${esc(l.desc||'')}</span></a>`).join('')}
   <section class="tools">
     <div class="row"><span>말하는 속도</span><div class="seg" id="rate">${[[.75,'느리게'],[.9,'조금 느리게'],[1,'보통']].map(([v,l])=>`<button data-r="${v}" aria-pressed="${S.rate==v}">${l}</button>`).join('')}</div></div>
+    <div class="row"><button id="share2">📱 다른 기기에 설치 (QR)</button></div>
     <div class="row"><button id="backup">진도 저장하기</button><button id="restore">진도 불러오기</button><button id="install">홈 화면에 설치</button></div>
     <p class="muted" id="toolMsg"></p><input type="file" id="file" accept="application/json" hidden>
     <p class="muted small">${SR?'말하기 확인: 마이크로 들린 문장이 맞는지 보여줘요 (발음 점수는 아니에요).':'이 브라우저는 마이크 확인을 지원하지 않아요. 소리 내서 말한 뒤 정답을 들어 보세요.'} · 앱 버전 ${window.APP_V||''}</p>
@@ -92,6 +93,7 @@ function home(){
   document.querySelectorAll('.dl').forEach(b=>b.onclick=()=>startSession(b.dataset.d));
   document.querySelectorAll('#rate button').forEach(b=>b.onclick=()=>{S.rate=+b.dataset.r;save();home();say(C.lang.startsWith('ja')?'こんにちは':'Hello!')});
   $('backup').onclick=()=>{const blob=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=KEY+'-progress.json';a.click();$('toolMsg').textContent='진도 파일을 내려받았어요.'};
+  $('share2').onclick=openShare;
   $('restore').onclick=()=>$('file').click();
   $('file').onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(typeof d.cards!=='object'||typeof d.done!=='object')throw 0;S=Object.assign({cards:{},done:{},days:{},rate:1},d);save();home();$('toolMsg').textContent='진도를 불러왔어요.'}catch(_){$('toolMsg').textContent='올바른 진도 파일이 아니에요.'}};
   $('install').onclick=async()=>{if(window.deferredPrompt){window.deferredPrompt.prompt();await window.deferredPrompt.userChoice;window.deferredPrompt=null;return}
@@ -217,6 +219,22 @@ async function listenOnly(){
   if(!me.stop){S.days[today()]=1;save();$('eK').textContent='다 들었어요!';$('eE').textContent='';$('eN').textContent=''}
 }
 
+/* 다른 기기에 설치: QR 크게 보기 */
+function openShare(){
+  const url=location.href.split(/[?#]/)[0];let qr='';
+  try{const q=qrcode(0,'M');q.addData(url);q.make();qr=q.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(e){}
+  const ov=document.createElement('div');ov.className='share';ov.innerHTML=`<div class="sbox" role="dialog" aria-label="다른 기기에 설치">
+    <div class="shead"><h2>다른 기기에 설치</h2><button class="x" aria-label="닫기">✕</button></div>
+    ${qr?`<div class="qr">${qr}</div>`:'<p class="muted">QR을 만들려면 인터넷 연결이 필요해요. 아래 주소를 옮겨 주세요.</p>'}
+    <ol class="ssteps"><li>설치할 휴대폰·태블릿의 <b>카메라</b>로 QR을 찍어요.</li><li>뜨는 주소를 눌러 <b>Chrome</b>(또는 삼성 인터넷)으로 열어요.</li><li>메뉴 ⋮ → <b>홈 화면에 추가 → 설치</b>를 눌러요.</li></ol>
+    <p class="url">${esc(url)}</p><div class="row"><button class="primary" id="copyUrl">주소 복사</button></div>
+    <p class="muted small">진도는 기기마다 따로 저장돼요. 옮기려면 첫 화면 아래 '진도 저장하기' 파일을 새 기기에서 '진도 불러오기' 하세요.</p></div>`;
+  document.body.appendChild(ov);const close=()=>ov.remove();
+  ov.querySelector('.x').onclick=close;ov.onclick=e=>{if(e.target===ov)close()};
+  ov.querySelector('#copyUrl').onclick=()=>{const b=ov.querySelector('#copyUrl'),ok=()=>{b.textContent='복사했어요';setTimeout(()=>b.textContent='주소 복사',1500)};
+    try{navigator.clipboard.writeText(url).then(ok,()=>getSelection().selectAllChildren(ov.querySelector('.url')))}catch(e){getSelection().selectAllChildren(ov.querySelector('.url'))}};
+}
+window.openShare=openShare;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.deferredPrompt=e});
 home();
 })();

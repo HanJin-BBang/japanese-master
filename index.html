@@ -72,14 +72,24 @@ p.big{display:block;width:auto;padding:0}
 .course.focus{box-shadow:0 0 0 2px var(--blue),0 4px 18px #102f540d}.chead>.muted{margin-left:auto}
 .linkcard{display:grid;gap:2px;background:var(--card);border-radius:20px;padding:16px 18px;margin:12px 0;text-decoration:none;color:var(--ink);box-shadow:0 4px 18px #102f540d}
 .ear .en{white-space:pre-line}
+header h1{flex:1}.qrbtn{background:#fff;color:var(--navy);padding:8px 12px;border-radius:12px;font-size:14px}
+.share{position:fixed;inset:0;background:rgba(15,23,42,.55);display:grid;place-items:center;padding:16px;z-index:50}
+.sbox{background:#fff;border-radius:22px;padding:18px;width:min(420px,100%);max-height:100%;overflow:auto}
+.shead{display:flex;align-items:center;justify-content:space-between}.shead h2{margin:0;font-size:20px}
+.qr{width:min(240px,70vw);margin:12px auto;padding:10px;background:#fff;border-radius:14px;box-shadow:0 0 0 3px var(--bg)}.qr svg{width:100%;height:auto;display:block}
+.ssteps{padding-left:20px;line-height:1.6;margin:8px 0}.ssteps b{color:var(--blue)}
+.url{font-family:ui-monospace,monospace;font-size:13px;word-break:break-all;color:var(--muted);user-select:text;-webkit-user-select:text}
+.sbox .row button{flex:1}.sbox .row{display:flex}
 </style>
 </head>
 <body>
-<header><div class="in"><img src="./icon.svg" alt=""><h1>일본어 마스터</h1></div></header>
+<header><div class="in"><img src="./icon.svg" alt=""><h1>일본어 마스터</h1><button class="qrbtn" id="qrBtn" type="button" aria-label="다른 기기에 설치 QR">QR</button></div></header>
 <main id="app"></main>
-<script>window.APP_V='22'</script>
+<script>window.APP_V='23'</script>
 <script src="./course-ja.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="./talk.js"></script>
+<script>document.getElementById('qrBtn').onclick=()=>window.openShare()</script>
 <script>
 /* 새 버전 자동 반영: 열 때·다시 화면에 나올 때 version.json 확인 */
 (function(){
