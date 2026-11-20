@@ -1,102 +1,95 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#172554"><link rel="manifest" href="./manifest.webmanifest"><title>일본어 마스터</title><style>body{margin:0;font-family:system-ui,sans-serif;background:#f4f7fb;color:#18243b}header .header-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:24px}header .header-main{min-width:0;flex:1}header .qr-install{display:flex;align-items:center;gap:10px;align-self:center;justify-self:end;background:#fff;border-radius:12px;padding:5px 10px 5px 5px;color:#172554;text-decoration:none;font-size:12px;font-weight:700}header .qr-install img{width:74px;height:74px;display:block;image-rendering:pixelated}header .installbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}header h1{margin:0 0 8px;font-size:28px;line-height:1.25}header .header-subtitle{line-height:1.5}header #installInfo:empty{display:none}header #installInfo{margin:12px 0 0}header .installbar button{background:#fff;color:#172554}header .installbar button.secondary{background:#334155;color:white}header{background:#172554;color:white;padding:20px}header .qr-install:hover{outline:2px solid #93c5fd}main{max-width:1100px;margin:auto;padding:16px}.tabs{display:flex;gap:8px;flex-wrap:wrap}button{border:0;border-radius:12px;padding:12px 16px;background:#e2e8f0;font-weight:700;cursor:pointer}button.active,.primary{background:#2563eb;color:white}.panel{background:white;border-radius:20px;padding:20px;margin-top:16px;box-shadow:0 4px 20px #17255410}.layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}.lesson-toolbar{position:relative;padding-top:22px;display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap;margin:0 0 8px;min-height:76px;align-content:center}.lesson-toolbar .actions{margin-top:0;justify-content:flex-end;gap:6px}.lesson-toolbar .tools-left{margin-right:auto;justify-content:flex-start}.lesson-toolbar .tools-left button{background:#e2e8f0}.lesson-toolbar .tools-right{margin-left:auto}.lesson-toolbar{justify-content:space-between}.lesson-toolbar button{padding:9px 11px;font-size:13px}.pane-top{min-height:76px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.pane-top .pane-heading{margin-bottom:0}.lesson-pane{min-width:0}.pane-heading{font-weight:700;margin-bottom:8px;min-height:24px}.kana{font-size:110px;text-align:center;margin:5px}.sub{text-align:center;color:#64748b}.stroke-card{margin:0;border:2px solid #dbeafe;border-radius:16px;background:#fff;overflow:hidden}.stroke-card svg{display:block;width:100%;height:100%;max-height:none}.stroke-card #strokeDiagram{height:100%}.stroke-card{height:340px;box-sizing:border-box;padding:12px;position:relative}.stroke-card .sub{position:absolute;top:12px;left:14px;background:#ffffffed;border-radius:8px;padding:5px 9px;font-size:15px;font-weight:700;color:#334155;z-index:1}.stroke-card #strokeDiagram{padding-top:10px;box-sizing:border-box}.stroke-caption{margin-top:10px;border-radius:10px;font-size:13px;color:#475569;padding:10px 12px;background:#eff6ff;min-height:44px;box-sizing:border-box;display:flex;align-items:center}.writing-caption{background:#eff6ff}.lesson-pane .actions{margin-top:8px}.stroke-toggle{border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;font-size:14px;padding:10px 13px}.stroke-content[hidden]{display:none}.stroke-content{min-width:0}.lesson-counter{position:absolute;top:0;right:0;font-weight:700;font-variant-numeric:tabular-nums;color:#475569}.stroke-pane.collapsed .pane-top{min-height:0;margin-bottom:0}.stroke-pane.collapsed{padding-bottom:0}.board{box-sizing:border-box;position:relative;border:2px solid #cbd5e1;border-radius:16px;overflow:hidden;background:linear-gradient(90deg,transparent 49.8%,#e2e8f0 50%,transparent 50.2%),linear-gradient(transparent 49.8%,#e2e8f0 50%,transparent 50.2%);height:340px;touch-action:none}.guide{position:absolute;inset:0;display:grid;place-items:center;font-size:240px;color:#dbe3ef;pointer-events:none}.guide[hidden]{display:none}canvas{position:absolute;width:100%;height:100%;touch-action:none}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choices button{font-size:24px;min-height:70px}.small{font-size:13px;color:#64748b}.progress{height:12px;background:#e2e8f0;border-radius:10px;overflow:hidden}.fill{height:100%;background:#22c55e}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px}.tile{font-size:30px;padding:12px}.done{background:#dcfce7}section[hidden]{display:none}@media(max-width:720px){.stroke-pane.collapsed{margin-bottom:-8px}.lesson-toolbar{min-height:0;padding-top:22px}.pane-top{min-height:0;margin-bottom:10px}.stroke-pane:not(.collapsed) .pane-top{min-height:42px}.lesson-toolbar .tools-left,.lesson-toolbar .tools-right{width:100%;justify-content:flex-start}.lesson-toolbar .tools-right{justify-content:flex-end}header .qr-install img{width:58px;height:58px}header .qr-install{font-size:11px;padding:4px;gap:5px}header .header-layout{column-gap:12px}header h1{font-size:22px}header .installbar button{padding:9px 11px}header{padding:14px}.lesson-toolbar{align-items:flex-start}.lesson-toolbar .tools-left,.lesson-toolbar .tools-right{margin:0}.layout{grid-template-columns:1fr}.stroke-card,.board{height:300px}.lesson-toolbar{gap:6px}.lesson-toolbar button{padding:9px 11px}}/* Shared lesson geometry: keep both canvases aligned regardless of toolbar wrapping */
-#learn .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
-#learn .pane-top,#learn .lesson-toolbar{height:104px;min-height:104px;max-height:104px;box-sizing:border-box;margin:0 0 10px;padding:0}
-#learn .pane-top{align-items:center}
-#learn .lesson-toolbar{position:relative;display:flex;align-content:center;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;padding-top:17px}
-#learn .lesson-toolbar .actions{margin:0;gap:5px}
-#learn .lesson-toolbar button{font-size:12px;padding:8px 9px}
-#learn .lesson-counter{top:0;right:0;line-height:16px;font-size:12px}
-#learn .stroke-card,#learn .board{height:340px}
-#learn .stroke-caption{margin-top:12px}
-#learn .stroke-pane.collapsed .pane-top{height:104px;min-height:104px;max-height:104px;margin-bottom:10px}
-@media(max-width:720px){
- #learn .layout{grid-template-columns:minmax(0,1fr);row-gap:12px}
- #learn .pane-top{height:48px;min-height:48px;max-height:48px;margin-bottom:8px}
- #learn .lesson-toolbar{height:auto;min-height:78px;max-height:none;margin-bottom:8px;padding-top:18px}
- #learn .stroke-pane.collapsed .pane-top{height:48px;min-height:48px;max-height:48px;margin-bottom:0}
- #learn .stroke-card,#learn .board{height:300px}
- #learn .lesson-toolbar .tools-left,#learn .lesson-toolbar .tools-right{width:auto;margin:0;justify-content:flex-start}
-}
-/* Unified toolbar: one consistent action row and one right-aligned navigation row */
-#learn .lesson-toolbar{height:104px;min-height:104px;max-height:104px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;flex-wrap:nowrap;gap:7px;padding:0;margin:0 0 10px}
-#learn .writing-actions{display:flex;flex-wrap:nowrap;align-items:center;gap:5px;min-width:0}
-#learn .writing-actions button{min-width:0;white-space:nowrap;flex:0 1 auto}
-#learn .page-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;min-height:30px}
-#learn .lesson-counter{position:static;margin-right:5px;white-space:nowrap;font-size:12px}
-#learn .page-actions button{white-space:nowrap}
-#learn .pane-top{height:104px;min-height:104px;max-height:104px;margin-bottom:10px}
-@media(max-width:720px){
- #learn .lesson-toolbar{height:auto;min-height:0;max-height:none;padding:0;gap:8px;margin-bottom:8px}
- #learn .writing-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
- #learn .writing-actions button{font-size:clamp(10px,2.5vw,13px);padding:9px 2px;line-height:1.25}
- #learn .page-actions{justify-content:flex-end;gap:5px}
- #learn .page-actions button{padding:7px 10px}
- #learn .lesson-counter{margin-right:4px}
-}
-/* Progress belongs to the stroke heading row, never the writing navigation row */
-#learn .pane-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#learn .pane-top .lesson-counter{position:static;margin-left:auto;margin-right:0;white-space:nowrap;font-size:13px;line-height:1.2}
-#learn .page-actions{justify-content:flex-end}
-@media(max-width:720px){
- #learn .pane-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
- #learn .pane-top .lesson-counter{font-size:13px}
- #learn .page-actions{justify-content:flex-end}
-}
-/* Navigation first; writing tools second. Preserve both desktop and mobile order. */
-#learn .lesson-toolbar{justify-content:flex-end}
-#learn .page-actions{order:0;justify-content:flex-end}
-#learn .writing-actions{order:1}
-@media(max-width:720px){#learn .lesson-toolbar{justify-content:flex-start}#learn .page-actions{justify-content:flex-end}}
-/* The page counter and navigation form one category, aligned to the guide heading. */
-#learn .lesson-toolbar{justify-content:flex-start;padding-top:0}
-#learn .page-actions{min-height:42px;align-items:center}
-#learn .lesson-counter{position:static;line-height:1.2}
-@media(max-width:720px){#learn .lesson-toolbar{justify-content:flex-start;padding-top:0}#learn .page-actions{min-height:42px}}
-/* Compact mobile mode: navigation shares the collapsed stroke header. */
-@media(max-width:720px){
- #learn .stroke-pane.collapsed .pane-top.has-navigation{height:auto;min-height:48px;max-height:none;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:5px;margin-bottom:0}
- #learn .pane-top.has-navigation .stroke-toggle{font-size:clamp(11px,2.7vw,14px);padding:8px 6px;white-space:nowrap;flex:0 1 auto}
- #learn .pane-top.has-navigation .page-actions{display:flex;gap:3px;min-width:0;min-height:0;flex:0 1 auto;margin-left:auto;justify-content:flex-end}
- #learn .pane-top.has-navigation .lesson-counter{font-size:clamp(10px,2.5vw,12px);margin:0 3px 0 0}
- #learn .pane-top.has-navigation .page-actions button{font-size:clamp(10px,2.5vw,12px);padding:8px 5px}
- #learn .lesson-toolbar.navigation-relocated{height:auto;min-height:0;max-height:none;padding:0;margin:4px 0 8px}
- #learn .lesson-toolbar.navigation-relocated .writing-actions{width:100%}
-}
-/* Clean mobile navigation matching English Master; handwriting geometry unchanged */
-header .header-layout{gap:14px}
-header .header-subtitle{overflow-wrap:anywhere}
-header .installbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:420px}
-header .installbar button{width:100%;min-width:0;min-height:46px}
-.conversation-entry{display:block;text-decoration:none;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd;border-radius:15px;padding:15px;font-weight:800;text-align:center;margin:0 0 12px;line-height:1.5}
-main>.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-main>.tabs button{min-width:0;min-height:48px;padding:10px 5px;line-height:1.35}
-@media(max-width:720px){
- header{padding:16px 14px}
- header .header-layout{grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:10px}
- header h1{font-size:23px;margin-bottom:7px}
- header .header-subtitle{font-size:13px;line-height:1.5}
- header .qr-install{padding:5px;display:flex;flex-direction:column;text-align:center;gap:4px;font-size:10px;max-width:100px}
- header .qr-install img{width:62px;height:62px}
- header .installbar{margin-top:13px;gap:7px}
- header .installbar button{font-size:13px;padding:10px 6px;min-height:45px}
- main{padding:12px}
- .conversation-entry{padding:13px 10px;font-size:14px;margin-bottom:10px}
- main>.tabs{gap:6px}
- main>.tabs button{font-size:clamp(12px,3.3vw,15px);padding:10px 2px}
- main>.panel{margin-top:12px;padding:15px;border-radius:16px}
-}
-@media(max-width:360px){header .qr-install img{width:52px;height:52px}header .qr-install{max-width:76px}header .installbar button{font-size:12px}}
-/* Match English Master install and QR panel */
-header>.header-main{max-width:1100px;margin:auto}
-header .installbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:none;margin-top:16px}
-header .installbar button{background:#e1e9f3;color:#183153;border-radius:14px;padding:14px 8px;min-height:48px;font-weight:800}
-header .installbar button.secondary{background:#e1e9f3;color:#183153}
-header .qr-panel{margin-top:14px;border:1px solid #ffffff55;border-radius:14px;padding:14px;background:#ffffff12}
-header .qr-panel summary{cursor:pointer;font-weight:800;line-height:1.5}
-header .qr-panel-inner{background:white;color:#1b2d47;border-radius:12px;text-align:center;padding:14px;margin-top:12px}
-header .qr-panel-inner img{display:block;max-width:100%;height:auto;margin:auto;border-radius:8px}
-header .qr-panel-inner p{line-height:1.6}
-header .qr-panel-inner a{color:#1d4ed8;font-weight:750;overflow-wrap:anywhere}
-header .qr-note{font-size:12px;color:#475569}
-@media(max-width:720px){header .installbar{gap:7px}header .installbar button{font-size:13px;padding:12px 6px}header .qr-panel{padding:12px 14px}}
-</style></head><body><header><div class="header-main"><h1>日本語 마스터</h1><div class="header-subtitle">히라가나부터 여행 회화까지 · S펜 학습</div><div class="installbar"><button id="installApp">📲 홈 화면에 추가</button><button class="secondary" id="removeApp">🗑️ 앱 삭제 안내</button></div><p id="installInfo" class="small" style="color:#dbeafe" aria-live="polite"></p><details class="qr-panel"><summary>📱 다른 기기에 설치 · QR코드 보기</summary><div class="qr-panel-inner"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;data=https%3A%2F%2Fhanjin-bbang.github.io%2Fjapanese-master%2F" width="220" height="220" alt="일본어 마스터 설치 주소 QR코드" loading="lazy"><p>다른 휴대폰 카메라로 QR을 스캔하면 일본어 마스터로 이동해요.</p><a href="https://hanjin-bbang.github.io/japanese-master/" target="_blank" rel="noopener">일본어 마스터 직접 열기</a><p class="qr-note">삼성 인터넷: 메뉴(☰) → 현재 페이지 추가 → 홈 화면<br>Chrome: 메뉴(⋮) → 홈 화면에 추가 또는 설치</p><p class="qr-note">QR 이미지를 보려면 인터넷 연결이 필요합니다.</p></div></details></div></header><main><a class="conversation-entry" href="./conversation.html">🗣️ 회화 집중 과정 시작 · 생활 / 여행 / 자유 대화 →</a><nav class="tabs"><button data-tab="learn" class="active">✍️ 쓰기·읽기</button><button data-tab="quiz">🧩 퀴즈</button><button data-tab="review">📚 복습·진도</button></nav><section id="learn" class="panel"><div class="layout"><div class="lesson-pane stroke-pane" id="strokePane"><div class="pane-top"><button type="button" class="stroke-toggle" id="strokeHeading" aria-controls="strokeContent" aria-expanded="true">획순 안내(표시 중) ▴</button></div><div class="stroke-content" id="strokeContent"><div id="character" hidden></div><div class="stroke-card"><div class="sub" id="reading"></div><div id="strokeDiagram" role="img" aria-label="획순 그림"></div></div><div class="stroke-caption" id="strokeCaption"></div></div></div><div class="lesson-pane"><div class="lesson-toolbar"><div class="page-actions"><span class="small lesson-counter" id="counter"></span><button id="prev">← 이전</button><button id="next">다음 →</button></div><div class="writing-actions"><button class="primary" id="speak">🔊 발음 듣기</button><button id="known">✓ 익혔어요</button><button id="toggleGuide">가이드 숨기기</button><button id="clear">지우기</button></div></div><div class="board" id="board"><div class="guide" id="guide"></div><canvas id="ink"></canvas></div><div class="stroke-caption writing-caption">왼쪽 획순을 보고 따라 쓰세요. 필기 평가는 아직 지원하지 않습니다.</div></div></div></section><section id="quiz" class="panel" hidden><h2>읽기 퀴즈</h2><p id="question"></p><div class="choices" id="choices"></div><p id="feedback" aria-live="polite"></p><button class="primary" id="newQuiz">다음 문제</button><p class="small" id="quizScore"></p></section><section id="review" class="panel" hidden><h2>학습 진도</h2><p id="progressText"></p><div class="progress"><div class="fill" id="progressFill"></div></div><h3>히라가나 46자</h3><div class="grid" id="grid"></div><div class="actions"><button id="export">진도 백업</button><button id="import">진도 불러오기</button><input type="file" id="importFile" accept="application/json" hidden></div><p class="small">진도는 이 기기의 브라우저에 저장됩니다. 브라우저 데이터 삭제 시 사라질 수 있으므로 백업을 권장합니다.</p></section></main><script>const HIRAGANA_STROKES={};</script><script src="./strokes-1.js" defer></script><script src="./strokes-2.js" defer></script><script src="./strokes-3.js" defer></script><script src="./strokes-4.js" defer></script><script src="./strokes-5.js" defer></script><script src="./app.js" defer></script></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172554">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg">
+<title>일본어 마스터</title>
+<style>
+:root{--navy:#172554;--blue:#2563eb;--bg:#f3f6fb;--card:#fff;--ink:#1b2d47;--muted:#64748b;--line:#e2e8f0;--good:#15803d;--warn:#b45309;--me:#dbeafe;--you:#f1f5f9}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Hiragino Sans","Noto Sans JP",sans-serif;-webkit-tap-highlight-color:transparent}
+header{background:var(--navy);color:#fff;padding:calc(14px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px))}
+header .in{max-width:640px;margin:auto;display:flex;align-items:center;gap:12px}
+header img{width:36px;height:36px;border-radius:9px}
+header h1{margin:0;font-size:20px}
+main{max-width:640px;margin:auto;padding:14px max(16px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;border:0;border-radius:14px;background:#e1e9f3;color:var(--navy);font-weight:700;padding:12px 14px;cursor:pointer}
+button:disabled{opacity:.5}
+.big{display:block;width:100%;padding:16px;font-size:18px;border-radius:16px}
+.primary{background:var(--blue);color:#fff}
+.ghost{background:#fff;box-shadow:inset 0 0 0 2px #cbd5e1}
+.warn{background:#fff7ed;color:var(--warn);box-shadow:inset 0 0 0 2px #fed7aa}
+.mic-btn{background:#fee2e2;color:#b91c1c}
+.muted{color:var(--muted);font-weight:400}.small{font-size:13px;line-height:1.6}
+section{background:var(--card);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 4px 18px #102f540d}
+.hero{position:relative}
+.hero h2{margin:0 0 10px;font-size:22px}
+.streak{position:absolute;right:16px;top:14px;text-align:center;line-height:1.1}
+.streak b{display:block;font-size:28px;color:var(--blue)}.streak span{font-size:12px;color:var(--muted)}
+.plan{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.plan li{display:flex;align-items:center;gap:10px;font-size:17px}
+.plan i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.hero .big+.big{margin-top:10px}
+.chead{display:flex;justify-content:space-between;align-items:baseline}.chead h3{margin:0;font-size:19px}
+.course p{margin:4px 0 10px}
+.dlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.dl{display:flex;align-items:center;gap:8px;text-align:left;background:var(--you);font-weight:600;padding:12px}
+.dl .num{width:24px;height:24px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:13px;flex:none}
+.dl.ok{background:#dcfce7}.dl.ok .num{background:var(--good);color:#fff}
+.tools .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.tools .row>button{flex:1}
+.seg{display:flex;gap:6px;flex:1}.seg button{flex:1;padding:10px 6px;font-size:14px}.seg button[aria-pressed=true]{background:var(--navy);color:#fff}
+.ses{background:var(--card);border-radius:20px;padding:16px;box-shadow:0 4px 18px #102f540d;margin-top:12px}
+.stop{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.x{width:40px;height:40px;padding:0;border-radius:50%;flex:none}
+.steps{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--muted);flex-wrap:wrap}
+.steps span.now{color:var(--blue);font-weight:800}.steps span.ok{color:var(--good)}.steps span.ok::before{content:'✓ '}.steps i{font-style:normal;opacity:.5}
+.stitle{font-size:20px;margin:6px 0 10px}
+.card{background:var(--bg);border-radius:16px;padding:18px;margin:10px 0}
+.ko{color:#475569;margin:6px 0;line-height:1.5}.en{font-weight:750;line-height:1.4;margin:6px 0}
+.big.ko,.ko.big{font-size:22px;color:var(--ink);font-weight:700}.en.big{font-size:clamp(22px,6vw,30px)}
+p.big{display:block;width:auto;padding:0}
+.hint{color:var(--muted);font-size:15px;margin:6px 0 10px;line-height:1.5}
+.answer{border-top:2px dashed #cbd5e1;margin-top:12px;padding-top:8px;cursor:pointer}
+.actions{display:flex;gap:10px;margin-top:10px}.actions .big{flex:1}
+.mic{min-height:24px;margin:8px 0;font-size:15px}.rec{color:#b91c1c}.good{color:var(--good);font-weight:800}.near{color:var(--warn);font-weight:800}.heard{color:var(--muted)}
+.talk{display:grid;gap:10px;max-height:52vh;overflow:auto;padding:4px 2px}
+.line{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.line.me{flex-direction:row-reverse}
+.who{font-size:12px;color:var(--muted);flex:none;margin-top:10px;width:30px;text-align:center}
+.bub{background:var(--you);border-radius:16px;padding:10px 14px;max-width:85%;transition:box-shadow .2s}
+.me .bub{background:var(--me)}
+.bub .en{margin:0;font-size:18px}.bub .ko{margin:2px 0 0;font-size:14px}
+.line.playing .bub{box-shadow:0 0 0 3px var(--blue)}
+.blank{display:inline-block;color:var(--blue);background:#fff;border-radius:8px;padding:2px 10px;font-size:15px}
+.ex{display:grid;gap:8px;margin-top:12px}.exl{text-align:left;background:#fff;display:grid;gap:2px}.exl span{font-weight:400;color:var(--muted);font-size:14px}
+.done{text-align:center;padding:28px 18px}.done h2{margin:6px 0}.fire{font-size:54px;font-weight:900;color:var(--blue)}
+.ear .en{color:var(--blue)}
+.rd{color:#7c3aed;font-size:14px;margin:2px 0;font-weight:500}.bub .rd{font-size:13px}
+.chead .pick{padding:6px 12px;font-size:13px;margin-left:8px}.badge{margin-left:8px;font-size:12px;background:var(--navy);color:#fff;border-radius:999px;padding:3px 10px}
+.course.focus{box-shadow:0 0 0 2px var(--blue),0 4px 18px #102f540d}.chead>.muted{margin-left:auto}
+.linkcard{display:grid;gap:2px;background:var(--card);border-radius:20px;padding:16px 18px;margin:12px 0;text-decoration:none;color:var(--ink);box-shadow:0 4px 18px #102f540d}
+.ear .en{white-space:pre-line}
+</style>
+</head>
+<body>
+<header><div class="in"><img src="./icon.svg" alt=""><h1>일본어 마스터</h1></div></header>
+<main id="app"></main>
+<script>window.APP_V='22'</script>
+<script src="./course-ja.js"></script>
+<script src="./talk.js"></script>
+<script>
+/* 새 버전 자동 반영: 열 때·다시 화면에 나올 때 version.json 확인 */
+(function(){
+  if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  function check(){fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(j=>{
+    if(!j||j.v===window.APP_V)return;const k='upd-'+j.v;try{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,'1')}catch(e){}
+    (navigator.serviceWorker?navigator.serviceWorker.getRegistration().then(r=>r&&r.update()).catch(()=>{}):Promise.resolve()).then(()=>location.replace(location.pathname+'?v='+j.v));
+  }).catch(()=>{})}
+  addEventListener('load',check);document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});
+})();
+</script>
+</body>
+</html>

@@ -1,17 +1,20 @@
 # 일본어 마스터 PWA
 
-갤럭시탭 S9 울트라 S펜을 위한 히라가나 학습 웹앱.
+바쁜 사람을 위한 **하루 10분 일본어 회화** 앱 (홈 화면 설치·오프라인 실행). 영어 마스터와 같은 엔진(`talk.js`)을 써요.
 
-## 기능
-- 기본 히라가나 46자 읽기/쓰기
-- Pointer Events 기반 S펜 필기 (압력 반영)
-- Web Speech API 일본어 발음
-- 4지선다 퀴즈, 진도 저장, JSON 백업/복원
-- 서비스 워커 오프라인 캐시
+## 하루 10분 루틴
+1. **복습**: 한국어를 보고 일본어로 소리 내 말하기 → 정답 듣기 → "말했어요 / 헷갈렸어요" (간격 반복 1·3·7·14·30·60일, 하루 최대 15개)
+2. **새 대화**: ① 들어 보기 ② 한 줄씩 따라 말하기 ③ 내 역할을 보지 않고 말하기
+3. **내 문장 만들기**: 오늘의 문장 틀에 내 이야기를 넣어 말하기
 
-## 배포
-GitHub 저장소 Settings → Pages → Build and deployment → Deploy from a branch → main / (root) → Save.
-배포 주소: https://hanjin-bbang.github.io/japanese-master/
+- 모든 문장에 읽는 법(히라가나)을 함께 표시
+- 🎧 듣기만 하기 / 🎤 말하기 확인(음성 인식, 발음 점수 아님) / 연속 일수 / 말하기 속도
+- 코스: 여행 8 · 일상 6 · 영업(경어) 6 · 숙박 운영(오모테나시) 8
+- 문자 기초: `kana.html` (예전 히라가나·가타카나 쓰기와 퀴즈, S펜 필기)
 
-## 주의
-필기 자동 판정은 지원하지 않습니다. 발음은 기기의 일본어 TTS 음성 지원에 의존합니다. 학습 진도는 해당 기기의 브라우저 저장소에 저장됩니다.
+## 구조
+- `talk.js` 엔진 / `course-ja.js` 내용 / `kana.html`·`kana.js`·`strokes-*.js` 문자 기초
+- `sw.js` 네트워크 우선 캐시 + `version.json` 자동 업데이트
+- 고칠 때: `index.html`의 `APP_V`, `version.json`, `sw.js`의 CACHE 숫자를 같이 올림
+
+배포: GitHub Actions(.github/workflows) → https://hanjin-bbang.github.io/japanese-master/
