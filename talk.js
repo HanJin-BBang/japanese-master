@@ -59,6 +59,7 @@ function dueCards(){const t=today();return Object.entries(S.cards).filter(([id,c
 function grade(id,ok){const c=S.cards[id];if(ok){c.box=Math.min(GAPS.length-1,c.box+1);c.due=today()+GAPS[c.box-1>=0?c.box-1:0]}else{c.box=0;c.due=today()+1}save()}
 const focusCourse=()=>C.courses.find(c=>c.id===S.focus&&c.dialogs.length)||C.courses.find(c=>c.dialogs.length);
 const nextDialog=()=>{const f=focusCourse();return(f&&f.dialogs.find(d=>!S.done[d.id]))||DIALOGS.find(d=>!S.done[d.id])};
+function logIt(k,n=1){const t=today();S.log=S.log||{};const d=S.log[t]=S.log[t]||{said:0,newd:0,ear:0};d[k]=(d[k]||0)+n;save()}
 function streak(){let n=0,t=today();if(!S.days[t])t--;while(S.days[t]){n++;t--}return n}
 
 /* ── 홈 ── */
@@ -74,8 +75,9 @@ function home(){
       <li><i>3</i>내 문장 만들기</li>
     </ul>
     <button class="big primary" id="go">${todayDone?'한 번 더 하기':'시작하기'}</button>
-    <button class="big ghost" id="ear">🎧 듣기만 하기 <span class="muted">· 화면 안 보고 들어요</span></button>
+    <button class="big ghost" id="ear">🎧 출퇴근 듣기 <span class="muted">· 오늘 대화+복습을 귀로만</span></button>
   </section>
+  ${weekCard()}
   ${C.courses.map(c=>{const n=c.dialogs.filter(d=>S.done[d.id]).length;return `
   <section class="course ${focusCourse()===c?'focus':''}"><div class="chead"><h3>${c.title}</h3><span class="muted">${c.soon?'준비 중':n+' / '+c.dialogs.length}</span>${c.soon||focusCourse()===c?'':`<button class="pick" data-c="${c.id}">이 코스로</button>`}${focusCourse()===c?'<span class="badge">지금 코스</span>':''}</div><p class="muted">${c.desc}</p>
     ${c.soon?'':`<div class="dlist">${c.dialogs.map((d,i)=>`<button class="dl ${S.done[d.id]?'ok':''}" data-d="${d.id}"><span class="num">${S.done[d.id]?'✓':i+1}</span>${esc(d.title)}</button>`).join('')}</div>`}</section>`}).join('')}
@@ -100,6 +102,13 @@ function home(){
     $('toolMsg').textContent=/SamsungBrowser/i.test(navigator.userAgent)?'삼성 인터넷: 메뉴(☰) → 현재 페이지 추가 → 홈 화면':'Chrome: 메뉴(⋮) → 홈 화면에 추가 → 설치'};
 }
 
+function weekCard(){
+  const t=today(),days=[...Array(7)].map((_,i)=>t-6+i),wd='일월화수목금토',L=S.log||{};
+  const cells=days.map(d=>{const x=L[d]||{},on=S.days[d],dt=new Date(d*864e5);return `<div class="wd ${on?'on':''} ${d===t?'tod':''}"><span>${wd[dt.getUTCDay()]}</span><i>${on?'✓':''}</i><b>${x.said?x.said:''}</b></div>`}).join('');
+  const all=Object.values(L).reduce((a,x)=>a+(x.said||0),0),wk=days.reduce((a,d)=>a+((L[d]||{}).said||0),0),dn=Object.keys(S.done).length,cn=days.filter(d=>S.days[d]).length;
+  return `<section class="week"><div class="chead"><h3>이번 주</h3><span class="muted">${cn}일 했어요</span></div><div class="wrow">${cells}</div>
+    <p class="muted small">이번 주 말한 문장 <b>${wk}</b> · 지금까지 <b>${all}</b>문장 · 배운 대화 <b>${dn}</b>개 · 복습 카드 <b>${Object.keys(S.cards).length}</b>장</p></section>`;
+}
 /* ── 공부 시간 ── */
 let ses=null;
 function frame(stepIdx,title,body){
@@ -128,8 +137,8 @@ function reviewCard(){
   $('show').onclick=show;
   if(SR)$('mic').onclick=async()=>{$('mic').disabled=true;const r=await listen([en,L0[3]],$('micOut'));$('mic').disabled=false;micResult(r,$('micOut'));show()};
   $('ans').onclick=()=>say(en);
-  $('easy').onclick=()=>{grade(id,true);ses.queue.shift();ses.reviewed++;reviewCard()};
-  $('hard').onclick=()=>{grade(id,false);ses.queue.shift();ses.again.push(id);ses.reviewed++;reviewCard()};
+  $('easy').onclick=()=>{logIt('said');grade(id,true);ses.queue.shift();ses.reviewed++;reviewCard()};
+  $('hard').onclick=()=>{logIt('said');grade(id,false);ses.queue.shift();ses.again.push(id);ses.reviewed++;reviewCard()};
 }
 function lineHTML(l,i,mode){const me=l[0]==='B';
   return `<div class="line ${me?'me':'you'}" data-i="${i}"><span class="who">${me?'나':'상대'}</span><div class="bub"><p class="en">${mode==='hideMe'&&me?'<span class="blank">내 차례</span>':esc(l[1])}</p>${mode==='hideMe'&&me?'':rdHTML(l)}<p class="ko">${esc(l[2])}</p></div></div>`}
@@ -169,13 +178,13 @@ async function dialogRole(i){
   if(l[0]==='A'){act.innerHTML='<button class="big ghost" id="rep">▶ 다시 듣기</button><button class="big primary" id="next">다음</button>';$('rep').onclick=()=>say(l[1]);$('next').onclick=()=>{hush();dialogRole(i+1)};
     await say(l[1],{pitch:.92});if(S.auto&&d.lines[i+1]&&ses&&ses.roleI===i)dialogRole(i+1);return}
   act.innerHTML=`${SR?'<button class="big mic-btn" id="mic">🎤 말하기</button>':''}<button class="big ${SR?'ghost':'primary'}" id="show">정답 보기</button>`;
-  const reveal=()=>{const p=document.querySelector('.talk').lastElementChild.querySelector('.en');p.textContent=l[1];if(l[3])p.insertAdjacentHTML('afterend',rdHTML(l));
+  const reveal=()=>{logIt('said');const p=document.querySelector('.talk').lastElementChild.querySelector('.en');p.textContent=l[1];if(l[3])p.insertAdjacentHTML('afterend',rdHTML(l));
     act.innerHTML='<button class="big ghost" id="rep">▶ 다시 듣기</button><button class="big primary" id="next">다음</button>';$('rep').onclick=()=>say(l[1]);$('next').onclick=()=>{hush();dialogRole(i+1)};say(l[1])};
   $('show').onclick=reveal;
   if(SR)$('mic').onclick=async()=>{$('mic').disabled=true;const r=await listen([l[1],l[3]],$('micOut'));micResult(r,$('micOut'));reveal()};
 }
 function dialogDone(){
-  const d=ses.dlg;S.done[d.id]=true;d.lines.forEach((l,i)=>{if(l[0]==='B')addCard(d.id+'#'+i)});save();
+  const d=ses.dlg;if(!S.done[d.id])logIt('newd');S.done[d.id]=true;d.lines.forEach((l,i)=>{if(l[0]==='B')addCard(d.id+'#'+i)});save();
   dialogPattern();
 }
 function dialogPattern(){
@@ -188,7 +197,7 @@ function dialogPattern(){
     <div class="actions">${SR?'<button class="big mic-btn" id="mic">🎤 말해 보기</button>':''}<button class="big primary" id="next">말해 봤어요</button></div>`);
   document.querySelectorAll('.exl').forEach(b=>b.onclick=()=>say(b.dataset.t));
   if(SR)$('mic').onclick=async()=>{const r=await listen(p.frame.replace('___',''),$('micOut'));$('micOut').innerHTML=r&&r.text?`<span class="good">좋아요!</span> <span class="heard">들린 말: ${esc(r.text)}</span>`:'<span class="muted">잘 안 들렸어요. 한 번 더!</span>'};
-  $('next').onclick=finish;
+  $('next').onclick=()=>{logIt('said');finish()};
 }
 function finish(){
   hush();S.days[today()]=1;save();const st=streak(),r=ses?ses.reviewed:0,d=ses&&ses.dlg;ses=null;
@@ -203,20 +212,35 @@ function finish(){
 let ear=null;
 function stopListenOnly(){if(ear){ear.stop=true;ear=null}}
 async function listenOnly(){
-  const ids=[...dueCards()],d=nextDialog()||DIALOGS[0];if(!ids.length)d.lines.forEach((l,i)=>{if(l[0]==='B')ids.push(d.id+'#'+i)});
-  Object.keys(S.cards).forEach(id=>{if(!ids.includes(id)&&ids.length<20)ids.push(id)});
-  const items=ids.map(lineOf).filter(Boolean);const me={stop:false};ear=me;
-  $('app').innerHTML=`<div class="ses"><div class="stop"><button class="x" id="quit" aria-label="그만하기">✕</button><div class="steps"><span class="now">🎧 듣기만 하기</span></div></div>
+  const d=nextDialog()||DIALOGS[0],due=dueCards().map(lineOf).filter(Boolean);
+  const mine=d.lines.filter(l=>l[0]==='B');
+  /* 재생 목록: 오늘 대화 듣기 → 내 대사 말해 보기 → 복습 → 대화 한 번 더 */
+  const Q=[];Q.push({k:'title',t:`오늘 대화 「${d.title}」`});d.lines.forEach(l=>Q.push({k:'line',l}));
+  Q.push({k:'title',t:'이제 내 대사를 먼저 말해 봐요'});mine.forEach(l=>Q.push({k:'drill',l}));
+  if(due.length){Q.push({k:'title',t:`복습 ${due.length}문장`});due.forEach(l=>Q.push({k:'drill',l}))}
+  Q.push({k:'title',t:'마지막으로 대화를 한 번 더'});d.lines.forEach(l=>Q.push({k:'line',l}));
+  const secs=Q.reduce((a,q)=>a+(q.k==='drill'?11:q.k==='line'?4:2),0);
+  const me={stop:false,pause:false,skip:false};ear=me;
+  $('app').innerHTML=`<div class="ses"><div class="stop"><button class="x" id="quit" aria-label="그만하기">✕</button><div class="steps"><span class="now">🎧 출퇴근 듣기 · 약 ${Math.max(1,Math.round(secs/60))}분</span></div></div>
+    <div class="ebar"><i id="eBar"></i></div>
     <div class="card ear"><p class="muted" id="eN"></p><p class="ko big" id="eK"></p><p class="en big" id="eE"></p></div>
-    <p class="hint">한국어를 듣고, 잠깐 멈춘 사이에 먼저 말해 보세요. 화면이 꺼지면 소리가 멈출 수 있어요.</p>
+    <p class="hint">한국어가 나오면 멈춘 사이에 먼저 말해 보세요. 화면이 꺼지면 소리가 멈출 수 있어요(화면 켜 둔 채 주머니에).</p>
+    <div class="actions"><button class="big ghost" id="pause">⏸ 잠깐 멈춤</button><button class="big ghost" id="skip">⏭ 다음</button></div>
     <div class="actions"><button class="big ghost" id="stop">그만하기</button></div></div>`;
   $('quit').onclick=$('stop').onclick=()=>{hush();stopListenOnly();home()};
+  $('pause').onclick=()=>{me.pause=!me.pause;$('pause').textContent=me.pause?'▶ 계속':'⏸ 잠깐 멈춤';if(me.pause)hush()};
+  $('skip').onclick=()=>{me.skip=true;hush()};
   try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(()=>{})}catch(e){}
-  for(let k=0;k<items.length;k++){if(me.stop)return;const[,en,ko]=items[k];
-    $('eN').textContent=`${k+1} / ${items.length}`;$('eK').textContent=ko;$('eE').textContent='';
-    await say(ko,{lang:'ko-KR',rate:1});if(me.stop)return;await wait(2600);if(me.stop)return;
-    $('eE').textContent=en+(items[k][3]?'\n'+items[k][3]:'');await say(en);await wait(700);if(me.stop)return;await say(en);await wait(1200)}
-  if(!me.stop){S.days[today()]=1;save();$('eK').textContent='다 들었어요!';$('eE').textContent='';$('eN').textContent=''}
+  const hold=async()=>{while(me.pause&&!me.stop)await wait(300)};
+  const step=async(fn)=>{await hold();if(me.stop||me.skip)return false;await fn();return !(me.stop||me.skip)};
+  for(let k=0;k<Q.length;k++){if(me.stop)return;me.skip=false;const q=Q[k];$('eBar').style.width=(k/Q.length*100)+'%';
+    if(q.k==='title'){$('eN').textContent=q.t;$('eK').textContent='';$('eE').textContent='';await step(()=>say(q.t,{lang:'ko-KR',rate:1.05}));await wait(400);continue}
+    const l=q.l,txt=l[1]+(l[3]&&l[3].replace(/\s/g,'')!==l[1].replace(/\s/g,'')?'\n'+l[3]:'');
+    if(q.k==='line'){$('eK').textContent=(l[0]==='B'?'나: ':'상대: ')+l[2];$('eE').textContent=txt;await step(()=>say(l[1],{pitch:l[0]==='B'?1.05:.92}));await wait(300);continue}
+    $('eK').textContent=l[2];$('eE').textContent='';
+    if(!await step(()=>say(l[2],{lang:'ko-KR',rate:1})))continue;if(!await step(()=>wait(2600)))continue;
+    $('eE').textContent=txt;if(!await step(()=>say(l[1])))continue;await wait(600);if(!await step(()=>say(l[1])))continue;await wait(900)}
+  if(!me.stop){$('eBar').style.width='100%';S.days[today()]=1;logIt('ear');$('eN').textContent='';$('eK').textContent='다 들었어요! 수고했어요';$('eE').textContent='';say(C.lang.startsWith('ja')?'おつかれさまでした':'Great job!')}
 }
 
 /* 다른 기기에 설치: QR 크게 보기 */

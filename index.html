@@ -80,15 +80,19 @@ header h1{flex:1}.qrbtn{background:#fff;color:var(--navy);padding:8px 12px;borde
 .ssteps{padding-left:20px;line-height:1.6;margin:8px 0}.ssteps b{color:var(--blue)}
 .url{font-family:ui-monospace,monospace;font-size:13px;word-break:break-all;color:var(--muted);user-select:text;-webkit-user-select:text}
 .sbox .row button{flex:1}.sbox .row{display:flex}
+.week .wrow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 6px}
+.wd{display:grid;justify-items:center;gap:3px;font-size:13px;color:var(--muted)}.wd i{width:30px;height:30px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-style:normal;color:#fff;font-weight:800}
+.wd.on i{background:var(--blue)}.wd.tod span{color:var(--ink);font-weight:800}.wd b{font-size:12px;color:var(--blue);min-height:14px}
+.ebar{height:8px;background:var(--bg);border-radius:9px;overflow:hidden;margin:6px 0}.ebar i{display:block;height:100%;width:0;background:var(--blue);transition:width .4s}
 </style>
 </head>
 <body>
 <header><div class="in"><img src="./icon.svg" alt=""><h1>일본어 마스터</h1><button class="qrbtn" id="qrBtn" type="button" aria-label="다른 기기에 설치 QR">QR</button></div></header>
 <main id="app"></main>
-<script>window.APP_V='23'</script>
-<script src="./course-ja.js?v=23"></script>
+<script>window.APP_V='24'</script>
+<script src="./course-ja.js?v=24"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script src="./talk.js?v=23"></script>
+<script src="./talk.js?v=24"></script>
 <script>document.getElementById('qrBtn').onclick=()=>window.openShare()</script>
 <script>
 /* 새 버전 자동 반영: 열 때·다시 화면에 나올 때 version.json 확인 */
